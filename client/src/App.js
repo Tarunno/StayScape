@@ -1,7 +1,9 @@
+import Header from "./components/Header";
+
 const App = () => {
   return (
-    <div>
-      <h1 className='bg-red-500'> initial Test </h1>
+    <div className="font-sans">
+      <Header/>
     </div> 
   );
 }
