@@ -2,3 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+input[type='text'], input[type='email'], input[type='password']{
+  @apply text-color2 w-full border my-2 py-2 px-3 rounded-full bg-color4 focus:outline-none;
+} 
+
+button.primary{
+  @apply text-color4 bg-color3 py-2 px-4 rounded-full;
+}
+
+button.oauth{
+  @apply flex items-center w-full border border-color2 my-2 py-2 px-3 rounded-full;
+}
+
+.error{
+  @apply text-red-500 py-2 px-4 my-2 bg-red-200 rounded-full;
+}
+.success{
+  @apply text-green-500 py-2 px-4 my-2 bg-green-200 rounded-full;
+}

@@ -1,0 +1,34 @@
+{
+  "name": "breezebnb",
+  "version": "1.0.0",
+  "description": "A full-stack application using: - React js, Node js, Express js, MongoDB (MERN) - Tailwindcss",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon api/index.js",
+    "client": "npm start --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tarunno/BreezeBnB.git"
+  },
+  "author": "Mahadi Hasan Taronno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tarunno/BreezeBnB/issues"
+  },
+  "homepage": "https://github.com/Tarunno/BreezeBnB#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
