@@ -26,7 +26,10 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
         type: 'success',
         payload: action + ' successful!'
       })
-      await setIsAuth(isAuthenticate)
+      await setIsAuth(isAuthenticate())
+      setTimeout(() => {
+        setShowModal(false)
+      }, 700);
     }
     else{
       setMessage({
@@ -38,17 +41,17 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
 
   return (
     <div>
-      <div onClick={() =>  setShowModal(false)} className='cursor-pointer z-10 w-full fixed top-0 left-0 flex justify-center items-center h-full bg-gray-800 backdrop-blur-sm bg-opacity-20'>
+      <div onClick={() =>  setShowModal(false)} className='cursor-pointer z-10 w-full fixed top-0 left-0 flex justify-center items-center h-full bg-gray-800 bg-opacity-20'>
       </div>
-      <div className='fixed z-20 p-5 flex flex-col gap-2 bg-color4 text-black w-[500px] rounded-lg' style={{
-          boxShadow: '4px 4px 28px 1px rgba(0, 0, 0, 0.2)',
+      <div className='fixed z-20 p-5 flex flex-col gap-2 bg-white text-black w-[500px] rounded-lg text-[15px] slide-up' style={{
+          boxShadow: '5px 10px 30px rgba(100, 100, 100, 0.2)',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)'
         }}>
         <div className='flex flex-col'>
           <h1 className='w-full text-center '>{type}</h1>
-          <div className='w-full h-[1px] bg-color1 my-5'></div>
+          <div className='h-[1px] bg-gray-400 opacity-50 my-5 w-[500px] ml-[-20px]'></div>
           <Message message={message}/>
           <div className="overflow-y-scroll h-[400px]"> 
             {type === 'Sign up' ?
@@ -66,8 +69,8 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
                 <button type="submit" className='primary'>{type}</button>
               </form>: null
             }
-            <div className="w-full h-[1px] bg-color1 flex justify-center my-6">
-              <span className="bg-color4 relative z-30 mt-[-12px] px-2 text-color2">or</span>
+            <div className="w-full h-[1px] bg-brand flex justify-center my-6">
+              <span className="bg-white z-10 flex justify-center mt-[-9px] items-center relative px-2 py-2 text-brand">or</span>
             </div>
             <div className='flex flex-col gap-1 justify-between'>
               <button className='oauth'>

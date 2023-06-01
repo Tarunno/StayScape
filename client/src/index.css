@@ -3,20 +3,38 @@
 @tailwind utilities;
 
 input[type='text'], input[type='email'], input[type='password']{
-  @apply text-color2 w-full border my-2 py-2 px-3 rounded-full bg-color4 focus:outline-none;
+  @apply w-full border my-2 py-2 px-3 rounded-full focus:outline-none;
 } 
 
 button.primary{
-  @apply text-color4 bg-color3 py-2 px-4 rounded-full;
+  @apply py-2 px-4 rounded-full bg-brand text-white;
 }
 
 button.oauth{
-  @apply flex items-center w-full border border-color2 my-2 py-2 px-3 rounded-full;
+  @apply flex items-center w-full border my-2 py-2 px-3 rounded-full bg-gray-200;
 }
 
 .error{
-  @apply text-red-500 py-2 px-4 my-2 bg-red-200 rounded-full;
+  @apply text-red-500 py-2 px-4 my-2 border border-red-200 rounded-full;
 }
 .success{
-  @apply text-green-500 py-2 px-4 my-2 bg-green-200 rounded-full;
+  @apply text-green-500 py-2 px-4 my-2 border border-green-200 rounded-full;
+}
+.selected{
+  @apply px-4 py-2 rounded-full bg-brand text-white mx-[-10px];
+}
+
+@keyframes slideUp {
+  0% {
+    margin-top: 500px;
+    opacity: 0;
+  }
+  100% {
+    margin-top: 0px;
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-in-out;
 }

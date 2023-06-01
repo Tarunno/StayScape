@@ -3,15 +3,13 @@ const BASE_URL = 'http://localhost:5000'
 export const isAuthenticate = () => {
   const user = JSON.parse(localStorage.getItem('BreezeBnB_auth'))
   if(user){
-    return true
+    return user
   }
   return false
 }
 
 export const Logout = () => {
-  if(isAuthenticate()){
-    localStorage.removeItem('BreezeBnB_auth')
-  }
+  localStorage.removeItem('BreezeBnB_auth')
 }
 
 export const Authenticate = async (cardinals, action) => {

@@ -3,21 +3,27 @@ import Header from "./components/Header";
 import IndexPage from "./pages/IndexPage";
 import { isAuthenticate } from "./api/userAuth";
 import { useEffect, useState } from 'react';
+import ProfilePage from './pages/profilePage';
 
 const App = () => {
 
-  const [isAuth, setIsAuth] = useState(true)
+  const [isAuth, setIsAuth] = useState(false)
+
+  const handleAuth = () => {
+    setIsAuth(isAuthenticate())
+  }
 
   useEffect(() => {
-    setIsAuth(isAuthenticate())
-  }, [isAuth])
-  
+    handleAuth()
+  }, [])
+   
   return (
     <div className='font-sans'>
       <Header isAuth={isAuth} setIsAuth={setIsAuth}/>
-      <div className='mt-[-220px] z-10 p-5'>
+      <div className='px-6 py-2'>
         <Routes>
-          <Route path='' element={<IndexPage  isAuth={isAuth} setIsAuth={setIsAuth}/>}/>
+          <Route path='/' element={<IndexPage  isAuth={isAuth} setIsAuth={setIsAuth}/>}/>
+          <Route path='/profile' element={<ProfilePage isAuth={isAuth} setIsAuth={setIsAuth}/>} />
         </Routes>
       </div>
     </div> 
