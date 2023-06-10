@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type='text'], input[type='email'], input[type='password']{
-  @apply w-full border my-2 py-2 px-3 rounded-full focus:outline-none;
+input[type='text'], input[type='email'], input[type='password'], input[type='datetime-local'], input[type='number']{
+  @apply w-full border my-2 py-2 px-3 rounded-full;
 } 
+
+textarea{
+  @apply w-full border rounded-xl h-[120px] p-2;
+}
 
 button.primary{
   @apply py-2 px-4 rounded-full bg-brand text-white;
@@ -21,7 +25,7 @@ button.oauth{
   @apply text-green-500 py-2 px-4 my-2 border border-green-200 rounded-full;
 }
 .selected{
-  @apply px-4 py-2 rounded-full bg-brand text-white mx-[-10px];
+  @apply px-4 py-2 rounded-full bg-brand text-white;
 }
 
 @keyframes slideUp {

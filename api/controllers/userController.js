@@ -85,7 +85,17 @@ const Login = asyncHandler(async (req, res) => {
   throw new Error('Something went wrong!')
 })
 
+// @desc    Get user info
+// @route   GET /api/user/info 
+// @access  Private
+const UserInfo = asyncHandler(async (req, res) => {
+  const id = req.user.id 
+  const user = await User.findById(id).select('-password')
+
+})
+
 module.exports = {
   Signup,
-  Login
+  Login,
+  UserInfo
 }

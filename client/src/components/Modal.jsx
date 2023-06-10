@@ -3,7 +3,7 @@ import {BsFacebook} from 'react-icons/bs'
 import {AiFillGoogleCircle, AiFillApple} from 'react-icons/ai'
 import {MdOutlineAlternateEmail} from 'react-icons/md'
 import Message from "./Message"
-import {Authenticate, isAuthenticate} from '../api/userAuth'
+import {Authenticate, isAuthenticate} from '../api/auth'
 
 const Modal = ({setShowModal, type, setIsAuth}) => {
 

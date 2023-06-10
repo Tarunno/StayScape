@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { FiSearch, FiUser, FiAlignJustify } from "react-icons/fi";
-import {FaFly} from 'react-icons/fa'
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
-import {Logout} from "../api/userAuth"
+import {Logout} from "../api/auth"
 import { useNavigate } from "react-router-dom";
+import {BiHomeHeart} from 'react-icons/bi'
 
 const Header = ({isAuth, setIsAuth}) => {
 
@@ -15,25 +14,36 @@ const Header = ({isAuth, setIsAuth}) => {
 
   return (
     <div>
-      <div className='px-6 py-2 w-full flex justify-between border border-b'>
+      <div className='px-6 py-4 w-full flex justify-between border border-b'>
         <Link to='/' className='flex gap-1 text-[25px] items-center hover:cursor-pointer'>
-          <span className='flex items-center font-bold text-brand text-[24px]'> <FaFly size={42}/> breezebnb</span>
+          <span className='flex font-bold text-brand text-[24px] justify-center items-center'> 
+            <BiHomeHeart size={35} className='mt-[-5px]'/>
+            StayScape 
+          </span>
         </Link>
-        <div className='flex text-[15px] shadow-sm gap-4 items-center border border-gray-300 rounded-full px-7 py-1 hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out'>
+        <div className='flex text-[15px] shadow-md gap-4 items-center border border-gray-300 rounded-full px-7 py-1 hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out'>
           <div >Anywhere</div>
           <div className='border-1 border-l border-gray-300 h-6'></div>
           <div>Any week</div>
           <div className='border-1 border-l border-gray-300 h-6'></div>
           <div>Add guests</div>
-          <button className='bg-brand rounded-full p-2 mr-[-22px]'>
-            <FiSearch size={20} color="white"/>
+          <button className='bg-brand rounded-full p-1 mr-[-15px] text-white'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
           </button>
         </div>
-        <div onClick={() => setShowUserOptions(!showUserOptions)} className='text-brand flex px-2 justify-center items-center text-[15px] shadow-sm border border-gray-300 rounded-full hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out'>
-          <FiAlignJustify size={20}/>
-          <button className='bg-brand text-white rounded-full p-2 mr-[-3px] ml-1 flex'>
-            <FiUser size={20}/>
-            {isAuth?isAuth.name:"Log in"}
+        <div onClick={() => setShowUserOptions(!showUserOptions)} className='text-black flex px-2 justify-center items-center text-[15px] shadow-md border border-gray-300 rounded-full hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-[-5px]">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <button className='text-black rounded-full p-2 mr-[-3px] ml-1 flex items-center justify-center gap-1'>
+            <div className="bg-gray-500 rounded-full text-white border-2 border-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 relative bottom-[-4px]">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </div>
+            {isAuth?isAuth.name:""}
           </button>
 
           {!showUserOptions? null:
@@ -63,7 +73,7 @@ const Header = ({isAuth, setIsAuth}) => {
               }
               <div className='w-[250px] ml-[-20px] h-[1px] bg-gray-400 opacity-50 rounded-full'></div>
               <ul>
-                <li className='p-2 transition-all duration-300 rounded-lg hover:bg-[#f4f4f4]'>Breeze your home</li>
+                <li className='p-2 transition-all duration-300 rounded-lg hover:bg-[#f4f4f4]'>Scape your home</li>
                 <li className='p-2 transition-all duration-300 rounded-lg hover:bg-[#f4f4f4]'>Help</li>
               </ul>
             </div>
