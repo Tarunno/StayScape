@@ -17,6 +17,10 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
     }
   }, [isAuth])
 
+  useEffect(() => {
+    document.title = 'StayScape | Profile'
+  }, [])
+
   return (
     <div className='flex flex-col gap-4 items-center justify-center text-[15px]'>
       <div className='w-fit flex gap-4 bg-white items-center justify-center py-1 px-4 hover:cursor-pointer transition-all duration-300 ease-in-out'>

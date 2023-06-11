@@ -2,12 +2,14 @@ import {useEffect, useState} from 'react'
 import {AiOutlinePlus} from 'react-icons/ai'
 import Perks from "../components/Perks"
 import AddPhotos from "../components/AddPhotos"
-import { addPlaces, getPlaces } from "../api/places"
+import { addPlaces, getPlaces, updatePlace, getPlace } from "../api/places"
 import Types from '../components/Types'
 import { ThreeDots } from  'react-loader-spinner'
+import MyPlace from '../components/MyPlace'
 
 const MyPlaces = () => {
   const [action, setAction] = useState()
+  const [id, setId] = useState()
   const [title, setTitle] = useState('')
   const [address, setAddress] = useState('')
   const [photos, setPhotos] = useState([])
@@ -28,6 +30,9 @@ const MyPlaces = () => {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
+  const [myPlaces, setMyPlaces] = useState([])
+  const [update, setUpdate] = useState(false)
+
   const inputHeader = (header, description) => {
     return (
       <>
@@ -37,46 +42,89 @@ const MyPlaces = () => {
     )
   }
 
-  const handleSubmit = async(e) => {
+  const resetSate = () => {
+    setId()
+    setTitle(''); setAddress(''); setBathrooms(1); setBedrooms(1);
+    setBeds(1); setCheckIn(new Date()); setCheckOut(new Date()); setDescription('');
+    setExtraInfo(''); setMaxGuests(1); setMessage(''); setPerks([]); setPhotoLink('');
+    setPhotoLinks([]); setPhotos([]); setPrice(1); setTypes([])
+    setAction('')
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const data = {
-      title, address, photoLinks, description, perks, extraInfo, 
-      checkIn, checkOut, maxGuests, bathrooms, beds, bathrooms, price, types
+    if(id){
+      console.log(photos);
+      const data = {
+        id, title, address, description, perks, extraInfo, photoLinks, photos,
+        checkIn, checkOut, maxGuests, bathrooms, beds, bathrooms, price, types
+      }
+      setLoading(true)
+      const res = await updatePlace(photos, data)
+      if(res['success']){
+        setMessage(res['success'])
+        resetSate()
+      } else{
+        setMessage(res['error'])
+      }
+      setLoading(false)
     }
-    setLoading(true)
-    const res = await addPlaces(photos, data)
-    if(res['success']){
-      setMessage(res['success'])
-      setTitle(''); setAddress(''); setBathrooms(1); setBedrooms(1);
-      setBeds(1); setCheckIn(new Date()); setCheckOut(new Date()); setDescription('');
-      setExtraInfo(''); setMaxGuests(1); setMessage(''); setPerks([]); setPhotoLink('');
-      setPhotoLinks([]); setPhotos([]); setPrice(1); setTypes([])
-      setAction('')
-    } else{
-      setMessage(res['error'])
+    else{
+      const data = {
+        title, address, photoLinks, description, perks, extraInfo, 
+        checkIn, checkOut, maxGuests, bedrooms, beds, bathrooms, price, types
+      }
+      setLoading(true)
+      const res = await addPlaces(photos, data)
+      if(res['success']){
+        setMessage(res['success'])
+        resetSate()
+      } else{
+        setMessage(res['error'])
+      }
+      setLoading(false)
     }
-    setLoading(false)
   }
   
-  const handleGetPlaces = async() => {
+  const handleGetPlaces = async () => {
+    setLoading(true)
     const res = await getPlaces()
+    setMyPlaces(res)
+    setLoading(false)
+    setUpdate(false)
+  }
+
+  const handleEdit = async (id) => {
+    setUpdate(true)
+    const res = await getPlace(id)
     console.log(res)
-    ////////////////////// NEXT: SHOW MY PLACES ///////////////////////
+    setId(res._id)
+    setTitle(res.title); setAddress(res.address); setBathrooms(res.bathrooms); setBedrooms(res.bedrooms);
+    setBeds(res.beds); setCheckIn(new Date(res.checkIn).toISOString().slice(0, 16)); setCheckOut(new Date(res.checkOut).toISOString().slice(0, 16)); setDescription(res.description);
+    setExtraInfo(res.extraInfo); setMaxGuests(res.maxGuests); setPerks(res.perks);       
+    setPhotoLinks(res.photoLinks); setPhotos(res.photos); setPrice(res.price); setTypes(res.types)
+    setAction('new')
   }
   
   useEffect(() => {
-    handleGetPlaces()
+    if(action != 'new')
+      handleGetPlaces()
+    console.log(photos);
   }, [action])
 
   return (
     <div className="text-[15px]">
       {action != 'new' && (
-        <div className="flex flex-col gap-2 items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
           <div onClick={() => setAction('new')} className="bg-brand py-2 text-white rounded-full flex w-[180px] items-center justify-center cursor-pointer"> 
             <AiOutlinePlus size={20} color={'#fff'}/> Add new place 
           </div>
-          <div>
-            /////////////////// SHOW MY PLACES ////////////////////////////
+          <div className='mt-1 flax flex-col items-center justify-center w-full'>
+            {inputHeader('My places', 'Places you have currently listed for rent')}
+            <div className='mt-4'>
+              {loading && <ThreeDots height="12" color="#5617e8" ariaLabel="three-dots-loading" visible={true}/>}
+            </div>
+            {myPlaces.map((place,) => <MyPlace key={place._id} place={place} handleEdit={handleEdit}/>)}
           </div>
         </div>
       )}

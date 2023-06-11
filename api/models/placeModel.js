@@ -6,7 +6,7 @@ const placeSchema = mongoose.Schema({
     ref: 'User'
   },
   title: String,
-  location: String,
+  address: String,
   photos: [String],
   photoLinks: [String],
   description: String,
