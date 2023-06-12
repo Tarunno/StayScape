@@ -6,6 +6,28 @@ input[type='text'], input[type='email'], input[type='password'], input[type='dat
   @apply w-full border my-2 py-2 px-3 rounded-full;
 } 
 
+.card-hover img{
+  transition: .6s;
+}
+.card-hover:hover img{
+  transform: scale(1.1);
+  transition: .6s;
+}
+
+.markdown h1{
+  font-size: 17px;
+  font-weight:500;
+}
+.markdown p {
+  margin: 10px 0px; 
+}
+.markdown li{
+  margin: 10px 20px;
+}
+.markdown > *{
+  list-style-type:circle!important;
+}
+
 textarea{
   @apply w-full border rounded-xl h-[120px] p-2;
 }

@@ -91,7 +91,12 @@ const Login = asyncHandler(async (req, res) => {
 const UserInfo = asyncHandler(async (req, res) => {
   const id = req.user.id 
   const user = await User.findById(id).select('-password')
-
+  if(user){
+    res.status(200)
+    res.json(user)
+  }
+  res.status(404)
+  throw new Error('User not found!')
 })
 
 module.exports = {

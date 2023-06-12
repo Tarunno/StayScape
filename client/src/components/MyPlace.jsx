@@ -1,11 +1,13 @@
 import { useState } from "react"
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const BASE_URL = 'http://localhost:5000'
 
 const MyPlace = ({place, handleEdit}) => { 
 
   return (
-    <div className='flex gap-4 p-4 bg-gray-100 w-full rounded-xl mb-4' id={place._id} onClick={(e) => handleEdit(place._id)}>
+    <div className='flex gap-4 p-4 bg-gray-100 w-full rounded-xl mb-4 cursor-pointer' id={place._id} onClick={(e) => handleEdit(place._id)}>
       <img className='h-[300px] w-[300px] object-cover rounded-xl' src={BASE_URL + '/api/media/places/' + place.photos[0]} />
       <div className='flex flex-col items-start gap-4'>
         <h1 className='text-2xl'>{place.title}</h1>
@@ -25,12 +27,15 @@ const MyPlace = ({place, handleEdit}) => {
           {new Date(place.checkOut).toISOString().slice(0,16).replace('T', ' ')}
         </p>
         <div className='flex flex-col'>
-          {place.description.slice(0, 500).split('-').map((des) => (
-            <p className='flex p-1'>
-              {des}
-            </p>
-          ))}
-          <p className='mt-[-145px] h-[140px] bg-gradient-to-t from-gray-100 to-white-0'></p>
+          <div className='font-normal'>
+           <ReactMarkdown
+              className='h-[180px] overflow-hidden markdown'
+              children={place.description}
+              remarkPlugins={[remarkGfm]}
+              escapeHtml={false}
+            />
+          </div>
+          <p className='mt-[-140px] h-[140px] bg-gradient-to-t from-gray-100 to-white-0'></p>
           <div className='mt-[20px]'>
             {place.perks.map(perk => (
               <p className='inline bg-brand py-2 px-3 rounded-full mr-1 text-white font-normal text-[13px]'>{perk}</p>

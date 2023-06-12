@@ -54,7 +54,6 @@ const MyPlaces = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if(id){
-      console.log(photos);
       const data = {
         id, title, address, description, perks, extraInfo, photoLinks, photos,
         checkIn, checkOut, maxGuests, bathrooms, beds, bathrooms, price, types
@@ -97,7 +96,6 @@ const MyPlaces = () => {
   const handleEdit = async (id) => {
     setUpdate(true)
     const res = await getPlace(id)
-    console.log(res)
     setId(res._id)
     setTitle(res.title); setAddress(res.address); setBathrooms(res.bathrooms); setBedrooms(res.bedrooms);
     setBeds(res.beds); setCheckIn(new Date(res.checkIn).toISOString().slice(0, 16)); setCheckOut(new Date(res.checkOut).toISOString().slice(0, 16)); setDescription(res.description);
@@ -109,7 +107,6 @@ const MyPlaces = () => {
   useEffect(() => {
     if(action != 'new')
       handleGetPlaces()
-    console.log(photos);
   }, [action])
 
   return (
@@ -137,6 +134,7 @@ const MyPlaces = () => {
             <input required value={address} onChange={(e) => setAddress(e.target.value)} type="text" placeholder="address"/>
             {inputHeader('Photos', 'Add enough photos for better deal')}
             <AddPhotos 
+              update={update} setUpdate={setUpdate}
               photoLink={photoLink} setPhotoLink={setPhotoLink}
               photos={photos} photoLinks={photoLinks} 
               setPhotos={setPhotos} setPhotoLinks={setPhotoLinks}
@@ -187,7 +185,7 @@ const MyPlaces = () => {
               {loading?<ThreeDots 
                 height="12" color="#fff" ariaLabel="three-dots-loading" visible={true}/>
               : message != ''? message: 'Add place' } </button>
-              <button type='button' onClick={(e) => {setAction('')}} className="bg-red-600 border-0 rounded-full px-4 py-2 text-white mt-2 w-2/4"> Cancel </button>
+              <button type='button' onClick={(e) => {setAction(''); resetSate()}} className="bg-red-600 border-0 rounded-full px-4 py-2 text-white mt-2 w-2/4"> Cancel </button>
             </div>
           </form>
         </div>

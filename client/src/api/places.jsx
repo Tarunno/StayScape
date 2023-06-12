@@ -1,6 +1,6 @@
 import {isAuthenticate} from './auth' 
 
-const BASE_URL = 'http://localhost:5000'
+const BASE_URL = 'http://localhost:5000/api/place'
 
 
 // @desc    Add new place
@@ -27,7 +27,7 @@ export const addPlaces = async (photos, data) => {
   }
 
   console.log(Array.from(formData));
-  const res = await fetch(BASE_URL + '/api/place/add-place ', {
+  const res = await fetch(BASE_URL + '/add-place ', {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer ' + user.token 
@@ -45,7 +45,7 @@ export const addPlaces = async (photos, data) => {
 export const getPlaces = async () => {
   const user = isAuthenticate()
 
-  const res = await fetch(BASE_URL + '/api/place', {
+  const res = await fetch(BASE_URL, {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + user.token 
@@ -62,9 +62,7 @@ export const getPlaces = async () => {
 export const getPlace = async (id) => {
   const user = isAuthenticate()
 
-  console.log(BASE_URL + '/api/place/' + id);
-
-  const res = await fetch(BASE_URL + '/api/place/' + id , {
+  const res = await fetch(BASE_URL + '/' + id , {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + user.token 
@@ -97,7 +95,7 @@ export const updatePlace = async (photos, data) => {
   })
   
   console.log(Array.from(formData));
-  const res = await fetch(BASE_URL + '/api/place/update-place ', {
+  const res = await fetch(BASE_URL + '/update-place ', {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer ' + user.token 
