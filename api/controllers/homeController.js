@@ -6,7 +6,7 @@ const User = require('../models/userModel')
 // @route   GET /api/place 
 // @access  Private 
 const GetPlaces = asyncHandler(async(req, res) => {
-  const places = await Place.find({}).select('-description -perks -extraInfo -types -owner')
+  const places = await Place.find({}).select('-description -perks -extraInfo -bedrooms -beds -bathrooms -types -owner')
   if(places){
     res.status(200)
     res.json(places)

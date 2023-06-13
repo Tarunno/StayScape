@@ -8,7 +8,7 @@ const fs = require('fs')
 // @route   GET /api/place 
 // @access  Private 
 const GetPlaces = asyncHandler(async(req, res) => {
-  const places = await Place.find({owner:req.user.id})
+  const places = await Place.find({owner:req.user.id}).select('-photoLinks -owner -types -bedrooms -beds -bathrooms -extraInfo')
   if(places){
     res.status(200)
     res.json(places)

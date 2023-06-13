@@ -9,7 +9,7 @@ import {IoRestaurantOutline} from 'react-icons/io5'
 import {CgSmartHomeWashMachine} from 'react-icons/cg'
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
-import { differenceInCalendarDays } from "date-fns/esm/fp"
+
 const BASE_URL = 'http://localhost:5000/api/media/places/'
 
 
@@ -25,6 +25,10 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
 
   const [cost, setCost] = useState(0)
   const [totalCost, setTotalCost] = useState(21)
+  const [due, setDue] = useState(0)
+
+  const [booking, setBooking] = useState(false)
+  const [paymentOption, setPaymentOption] = useState('full')
 
   const handleGetPlace = async (id) => {
     const res = await getPlace(id)
@@ -34,7 +38,20 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
     setOwner(owner)
   }
 
+  const handleBooking = () => {
+    console.log('------------------------------');
+    console.log('CUSTOMER: ', isAuth._id);
+    console.log('PLACE: ', place._id);
+    console.log('CHECKIN: ', checkIn);
+    console.log('CHECKOUT: ', checkOut);
+    console.log('GUESTS: ', guests);
+    console.log("COST: ", totalCost);
+    console.log("DUE: ", due);
+    console.log('----------------------------------');
+  }
+
   useEffect(() => {
+    document.title = 'StayScape | Booking'
     handleGetPlace(id)
   }, [id])
 
@@ -115,7 +132,7 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
             }
           </div>
         </div>
-        <div onClick={() => setShowPhotos(!showPhotos)} className='flex gap-1 mt-[-55px] mr-3 bg-gray-100 w-[150px] p-2 rounded-xl relative z-10 float-right cursor-pointer'>
+        <div onClick={() => setShowPhotos(!showPhotos)} className='flex gap-1 mt-[-55px] mr-3 bg-gray-100 w-[150px] p-2 rounded-xl relative float-right cursor-pointer'>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
           </svg>
@@ -214,7 +231,7 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
               />
           </div>
         </div>
-        <div className="sticky flex flex-col items-center top-6 h-[400px] w-full border rounded-2xl p-4 shadow-xl">
+        <div className="sticky flex flex-col items-center top-10 h-[400px] w-full border rounded-2xl p-4 shadow-xl">
           <div className='flex justify-between items-center w-full pb-4'>
             <h1 className='text-[20px]'>${ place.price} <span className='text-[15px] font-normal'>night</span></h1>
             <div className='flex items-center justify-center text-[13px]'>
@@ -268,7 +285,8 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
             </span>
           </div>
           <div className="w-full mt-4 pb-4">
-            <button className='bg-gradient-to-r from-brand to-[#9432d1] text-white w-full p-3 rounded-lg'> Reserve </button>
+            <button className='bg-gradient-to-r from-brand to-[#9432d1] text-white w-full p-3 rounded-lg'
+           onClick={() => setBooking(true)} > Reserve </button>
             <span className='w-full flex justify-between items-center mt-6'>
               <p className='font-normal text-[15px]' >${place.price} x {nights} nights</p>
               <p className='font-normal text-[15px]' >${cost}</p>
@@ -278,9 +296,135 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
               <p className='font-normal text-[15px]' >$21</p>
             </span>
           </div>
+          {booking &&
+            <div className="fixed flex flex-col gap-4 left-0 top-0 w-[100vw] bg-white
+            min-h-[100vh] h-[100%] z-20 overflow-y-scroll slide-up p-5">
+              <div onClick={() => setBooking(false)} className='flex fixed right-4 justify-end items-center p-2 cursor-pointer'>
+                <div className='flex items-center justify-center shadow-md hover:shadow-lg p-2 border bg-white rounded-full w-[100px]'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Cancel
+                </div>
+              </div>
+              <div className="px-20 py-16">
+                <h1 className='text-[40px] font-normal flex items-center gap-1'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                  </svg>
+                  Confirm and pay
+                </h1>
+                <div className='grid grid-cols-2 gap-6'>
+                  <div>
+                    <h1 className='text-[22px] mt-4'>Stay</h1>
+                    <p className='text-[15px] font-thin'>
+                      From <span className='font-medium'> {checkIn} </span> to <span className='font-medium'>{checkOut}</span></p>
+                    <h1 className='text-[22px] mt-4'>Guests</h1>
+                    <p className='text-[15px] font-thin border-b pb-4'>{guests} guests</p>
+                    <div>
+                      <h1 className='text-[22px] mt-4'>Chose how to pay</h1>
+                      <div className='flex justify-between items-center border border-b-0 mt-2 p-4 rounded-t-xl cursor-pointer' style={{
+                          border: paymentOption === 'full'? '2px solid #111': null  
+                        }}
+                        onClick={() => {
+                          setPaymentOption('full')
+                          setDue(0)
+                        }}
+                        > 
+                        <span>
+                          <p>Pay full</p>
+                          <p className='text-[15px] font-normal'>Pay the total ({totalCost}) now and you're all set.</p>
+                        </span>
+                        {paymentOption === 'full' && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                          <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+                        </svg>
+                        }
+                        {paymentOption === 'half' && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-8 h-8">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        }
+                      </div>
+                      <div className='flex justify-between items-center border border-t-0 p-4 rounded-b-xl cursor-pointer' style={{
+                          border: paymentOption === 'half'? '2px solid #111': null  
+                        }}
+                        onClick={() => {
+                          setPaymentOption('half')
+                          setDue(totalCost / 2)
+                        }}
+                        > 
+                        <span>
+                          <p>Pay part now, part later</p>
+                          <p className='text-[15px] font-normal'>${totalCost / 2} due today, ${totalCost / 2} on {checkIn}. No extra fees.</p>
+                        </span>
+                        {paymentOption === 'full' && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-8 h-8">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        }
+                        {paymentOption === 'half' && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                          <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+                        </svg>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div className='border mt-[-50px] rounded-xl shadow-xl pt-6 px-6 pb-1 h-fit'>
+                    <div className='flex gap-4 border-b pb-6'>
+                      <img src={BASE_URL + place.photos[0]} className='w-24 h-24 rounded-lg object-cover'/>
+                      <div className='flex flex-col justify-between'>
+                        <div>
+                          <p className='text-[13px] font-thin'>{place.types[0]}</p>
+                          <p>{place.title}</p>
+                        </div>
+                        <p className='flex text-[13px] items-center gap-2'>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                            <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                          </svg>
+                          <span className='ml-[-7px]'>4.5</span>&#8226;<span className='underline'> 201 reviews </span>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                            <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                          </svg>
+                          <span className='ml-[-7px] underline'><a target="blank" href={'https://www.google.com/maps/place/' + place.address}>{place.address}</a></span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-full mt-4">
+                      <h1 className='text-[22px] mt-2'>Price details</h1>
+                      <span className='w-full flex justify-between items-center mt-4'>
+                        <p className='font-normal text-[15px]' >${place.price} x {nights} nights</p>
+                        <p className='font-normal text-[15px]' >${cost}</p>
+                      </span>
+                      <span className='w-full flex justify-between items-center mt-3 mb-6'>
+                        <p className='underline font-normal text-[15px]s'>StayScape fee</p>
+                        <p className='underline font-normal text-[15px]' >$21</p>
+                      </span>
+                      <span className='py-4 flex w-full items-center justify-between border-t'>
+                        <p className='font-medium text-[15px]s'>Total</p>
+                        <p className='font-medium text-[15px]' >${totalCost}</p>
+                      </span>
+                      {paymentOption === 'half' && <div>
+                        <span className='flex flex-col text-red-700 w-full items-start justify-between border-t py-4'>
+                          <span className='flex w-full justify-between items-center pb-2'>
+                            <p className='font-medium text-[15px]s'>Due now</p>
+                            <p className='font-medium text-[15px]' >${due}</p>
+                          </span>
+                          <span className='flex w-full justify-between items-center pb-2'>
+                            <p className='font-normal text-[15px]s'>Due on <span className='underline'>{checkIn}</span></p>
+                            <p className='font-normal text-[15px]' >${due}</p>
+                          </span>
+                        </span>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <button className='bg-gradient-to-r from-brand to-[#9432d1] text-white w-full p-3 mt-6 rounded-lg'
+                  onClick={() => handleBooking()} > Book Now! </button>
+              </div>
+            </div>
+            }
           <span className='pt-4 flex w-full items-center justify-between border-t border-gray-400'>
-          <p className='font-medium text-[15px]s'>Total</p>
-              <p className='font-medium text-[15px]' >${totalCost}</p>
+            <p className='font-medium text-[15px]s'>Total</p>
+            <p className='font-medium text-[15px]' >${totalCost}</p>
           </span>
         </div>
       </div>
