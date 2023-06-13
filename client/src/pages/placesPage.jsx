@@ -56,7 +56,7 @@ const MyPlaces = () => {
     if(id){
       const data = {
         id, title, address, description, perks, extraInfo, photoLinks, photos,
-        checkIn, checkOut, maxGuests, bathrooms, beds, bathrooms, price, types
+        checkIn, checkOut, maxGuests, bedrooms, beds, bathrooms, price, types
       }
       setLoading(true)
       const res = await updatePlace(photos, data)
@@ -95,7 +95,8 @@ const MyPlaces = () => {
 
   const handleEdit = async (id) => {
     setUpdate(true)
-    const res = await getPlace(id)
+    let res = await getPlace(id)
+    res = res['place']
     setId(res._id)
     setTitle(res.title); setAddress(res.address); setBathrooms(res.bathrooms); setBedrooms(res.bedrooms);
     setBeds(res.beds); setCheckIn(new Date(res.checkIn).toISOString().slice(0, 16)); setCheckOut(new Date(res.checkOut).toISOString().slice(0, 16)); setDescription(res.description);

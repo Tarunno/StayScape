@@ -4,6 +4,8 @@ import IndexPage from "./pages/IndexPage";
 import { isAuthenticate } from "./api/auth";
 import { useEffect, useState } from 'react';
 import ProfilePage from './pages/profilePage';
+import SinglePlace from './pages/singlePage';
+
 
 const App = () => {
 
@@ -20,6 +22,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<IndexPage  isAuth={isAuth} setIsAuth={setIsAuth}/>}/>
           <Route path='/profile' element={<ProfilePage isAuth={isAuth} setIsAuth={setIsAuth} />} />
+          <Route path='/place/:id' element={<SinglePlace isAuth={isAuth} setIsAuth={setIsAuth} />} />
         </Routes>
       </div>
     </div> 

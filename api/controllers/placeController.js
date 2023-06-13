@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Place = require('../models/placeModel')
+const User = require('../models/userModel')
 const fs = require('fs')
 
 
@@ -73,9 +74,13 @@ const AddPlace = asyncHandler(async(req, res) => {
 // @access  Private 
 const GetPlace = asyncHandler(async(req, res) => {
   const place = await Place.findById(req.params.id)
+  const owner = await User.findById(place.owner).select('-password')
   if(place){
     res.status(200)
-    res.json(place)
+    res.json({
+      place,
+      owner
+    })
   }
   else{
     res.status(401)
@@ -94,7 +99,6 @@ const UpdatePlace = asyncHandler(async(req, res) => {
   } = req.body
 
   const place = await Place.findById(id)
-  console.log(place);
 
   if(title=='' || address=='' || description==''){
     res.status(400)
@@ -119,8 +123,6 @@ const UpdatePlace = asyncHandler(async(req, res) => {
     fs.renameSync(path, newPath)
     addedUploadedFiles.push(newPath.replace('api\\media\\places\\', ''))
   }
-
-  console.log(addedUploadedFiles)
 
   place.set({
     id,

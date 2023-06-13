@@ -8,6 +8,7 @@ input[type='text'], input[type='email'], input[type='password'], input[type='dat
 
 .card-hover img{
   transition: .6s;
+  cursor: pointer;
 }
 .card-hover:hover img{
   transform: scale(1.1);
@@ -19,7 +20,7 @@ input[type='text'], input[type='email'], input[type='password'], input[type='dat
   font-weight:500;
 }
 .markdown p {
-  margin: 10px 0px; 
+  margin: 5px 0px; 
 }
 .markdown li{
   margin: 10px 20px;
@@ -63,4 +64,17 @@ button.oauth{
 
 .slide-up {
   animation: slideUp 0.5s ease-in-out;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.jump {
+  animation:jump .7s infinite ease-in-out;
 }

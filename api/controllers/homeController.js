@@ -6,15 +6,10 @@ const User = require('../models/userModel')
 // @route   GET /api/place 
 // @access  Private 
 const GetPlaces = asyncHandler(async(req, res) => {
-  const places = await Place.find({})
-  let owners = []
-  for(let i=0; i<places.length; i++){
-    const owner = await User.findById(places[i].owner).select('-password')
-    owners.push(owner)
-  }
+  const places = await Place.find({}).select('-description -perks -extraInfo -types -owner')
   if(places){
     res.status(200)
-    res.json({places, owners})
+    res.json(places)
   }
   else{
     res.status(401)
