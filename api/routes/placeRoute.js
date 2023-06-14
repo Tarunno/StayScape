@@ -6,8 +6,8 @@ const { AddPlace, GetPlaces, UpdatePlace, GetPlace } = require('../controllers/p
 
 const photosMiddleware = multer({dest:'api/media/places/'})
 
-router.route('').get(protect, GetPlaces)
-router.route('/:id').get(protect, GetPlace)
+router.route('/').get(protect, GetPlaces)
+router.route('/:id').get(GetPlace)
 router.route('/add-place').post(protect, photosMiddleware.array('photos', 100), AddPlace)
 router.route('/update-place').post(protect, photosMiddleware.array('photos', 100), UpdatePlace)
 

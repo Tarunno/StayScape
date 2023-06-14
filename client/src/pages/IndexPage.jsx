@@ -11,6 +11,9 @@ const IndexPage = () => {
   const [places, setPlaces] = useState([])
   const [type, setType] = useState('all')
   const [loading, setLoading] = useState(false)
+  const [perks, setPerks] = useState([])
+  const [filtered, setFiltered] = useState([])
+  const [bedrooms, setBedrooms] = useState(0)
 
   const handleDateFormat =(checkIn, checkOut) => {
     const monthNames = [
@@ -51,16 +54,37 @@ const IndexPage = () => {
   }
 
   const handleGetPlaces = async() => {
+    setPlaces([])
     setLoading(true)
-    const data = await getPlaces()
+    const data = await getPlaces(type)
     if(data['error']){
       console.log('ERROR ', data['error']);
     }
     else{
       setPlaces(data)
+      setFiltered(data)
     }
     setLoading(false)
   }
+
+  const handleFilter = async() => {
+    if(perks && perks.length > 0){
+      const tempFiltered = places.filter((place) => perks.every(el => place.perks.includes(el)))
+      setFiltered(tempFiltered)
+    }
+    else{
+      setFiltered(places)
+    }
+    console.log(places);
+  }
+
+  useEffect(() => {
+    handleFilter()
+  }, [perks])
+
+  useEffect(() => {
+    handleGetPlaces()
+  }, [type])
 
   useEffect(() => {
     document.title = 'StayScape | Home'
@@ -70,11 +94,16 @@ const IndexPage = () => {
   return (
     <div className='flex flex-col gap-4'>
       <div className='mt-2'>
-        <FilterType type={type} setType={setType}/>
+        <FilterType 
+          type={type} setType={setType} 
+          places={places} setPlaces={setPlaces}
+          perks={perks} setPerks={setPerks}
+          bedrooms={bedrooms} setBedrooms={setBedrooms}
+        />
       </div>
       <div className='grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-4'>
       {loading && <ThreeDots height="12" color="#5617e8" ariaLabel="three-dots-loading" visible={true}/>}
-        {places.map((place, index) => (
+        {filtered.map((place, index) => (
           <Link to={'/place/' + place._id} key={index} className='hover:cursor-pointer card-hover'>
             <div className='overflow-hidden rounded-xl'>
               <img 

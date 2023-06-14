@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { getPlace } from "../api/places"
 import { ThreeDots } from  'react-loader-spinner'
 import {GrCar} from 'react-icons/gr'
@@ -9,12 +9,15 @@ import {IoRestaurantOutline} from 'react-icons/io5'
 import {CgSmartHomeWashMachine} from 'react-icons/cg'
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
+import { bookPlace } from "../api/booking"
 
 const BASE_URL = 'http://localhost:5000/api/media/places/'
 
 
 const SinglePlace = ({isAuth, setIsAuth}) => {
   const {id} = useParams()
+  const navigate = useNavigate()
+
   const [place, setPlace] = useState(null)
   const [showPhotos, setShowPhotos] = useState(false)
   const [owner, setOwner] = useState()
@@ -29,6 +32,11 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
 
   const [booking, setBooking] = useState(false)
   const [paymentOption, setPaymentOption] = useState('full')
+  const [phone, setPhone] = useState()
+
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+
 
   const handleGetPlace = async (id) => {
     const res = await getPlace(id)
@@ -38,16 +46,19 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
     setOwner(owner)
   }
 
-  const handleBooking = () => {
-    console.log('------------------------------');
-    console.log('CUSTOMER: ', isAuth._id);
-    console.log('PLACE: ', place._id);
-    console.log('CHECKIN: ', checkIn);
-    console.log('CHECKOUT: ', checkOut);
-    console.log('GUESTS: ', guests);
-    console.log("COST: ", totalCost);
-    console.log("DUE: ", due);
-    console.log('----------------------------------');
+  const handleBooking = async () => {
+    const data = {
+      customer: isAuth._id, owner:owner._id, place: place._id,
+      checkIn, checkOut, guests, cost:totalCost, due, phone
+    }
+    setLoading(true)
+    const res = await bookPlace(data)
+    if(res['message']){
+      setMessage(res['message'])
+      navigate('/profile')
+    }
+    if(res['error']) setMessage(res['error'])
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -77,7 +88,15 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
   }, [cost])
 
   useEffect(() => {
-    setNights(new Date(checkOut).getDate() - new Date(checkIn).getDate())
+    let tempCheckIn = new Date(checkOut)
+    let tempCheckOut = new Date(checkIn)
+    if(tempCheckIn.getMonth() == tempCheckOut.getMonth()){
+      setNights(Math.abs(tempCheckOut.getDate() - tempCheckIn.getDate()))
+    }
+    else{
+      setNights(Math.abs(30 - tempCheckIn.getDate() + tempCheckOut.getDate() 
+                + (tempCheckOut.getMonth() - tempCheckIn.getMonth() - 1) * 30))
+    }
   }, [checkIn, checkOut])
 
   if(!place){
@@ -231,7 +250,7 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
               />
           </div>
         </div>
-        <div className="sticky flex flex-col items-center top-10 h-[400px] w-full border rounded-2xl p-4 shadow-xl">
+        <div className="sticky flex flex-col items-center top-28 h-[400px] w-full border rounded-2xl p-4 shadow-xl">
           <div className='flex justify-between items-center w-full pb-4'>
             <h1 className='text-[20px]'>${ place.price} <span className='text-[15px] font-normal'>night</span></h1>
             <div className='flex items-center justify-center text-[13px]'>
@@ -296,7 +315,12 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
               <p className='font-normal text-[15px]' >$21</p>
             </span>
           </div>
-          {booking &&
+          <span className='pt-4 flex w-full items-center justify-between border-t border-gray-400'>
+            <p className='font-medium text-[15px]s'>Total</p>
+            <p className='font-medium text-[15px]' >${totalCost}</p>
+          </span>
+        </div>
+        {booking &&
             <div className="fixed flex flex-col gap-4 left-0 top-0 w-[100vw] bg-white
             min-h-[100vh] h-[100%] z-20 overflow-y-scroll slide-up p-5">
               <div onClick={() => setBooking(false)} className='flex fixed right-4 justify-end items-center p-2 cursor-pointer'>
@@ -379,11 +403,11 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                             <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
                           </svg>
-                          <span className='ml-[-7px]'>4.5</span>&#8226;<span className='underline'> 201 reviews </span>
+                          <span className='ml-[-7px]'>4.5</span>&#8226;<span className='underline'> 201&nbsp;reviews </span>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                             <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                           </svg>
-                          <span className='ml-[-7px] underline'><a target="blank" href={'https://www.google.com/maps/place/' + place.address}>{place.address}</a></span>
+                          <div className='ml-[-7px] underline'><a target="blank" href={'https://www.google.com/maps/place/' + place.address}>{place.address}</a></div>
                         </p>
                       </div>
                     </div>
@@ -417,16 +441,23 @@ const SinglePlace = ({isAuth, setIsAuth}) => {
                     </div>
                   </div>
                 </div>
-                <button className='bg-gradient-to-r from-brand to-[#9432d1] text-white w-full p-3 mt-6 rounded-lg'
-                  onClick={() => handleBooking()} > Book Now! </button>
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  <div className='flex-1 border rounded-lg flex gap-1 items-center'>
+                    <div className="pl-4">
+                      <p>BD&nbsp;+088</p>
+                    </div>
+                    <input type="phone" style={{width:'100%', padding:'10px', borderRadius: '5px'}} 
+                      placeholder="Enter your phone number" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                  </div>
+                  <button className='bg-gradient-to-r from-brand to-[#9432d1] flex-1 text-white w-full h-[45px] rounded-lg 
+                                    flex items-center justify-center'
+                    onClick={() => handleBooking()} > {loading===true?
+                      <ThreeDots height="12" color="#fff" ariaLabel="three-dots-loading" visible={true}/>
+                      : message !== ''? message: 'Book Now!'} </button>
+                </div>
               </div>
             </div>
             }
-          <span className='pt-4 flex w-full items-center justify-between border-t border-gray-400'>
-            <p className='font-medium text-[15px]s'>Total</p>
-            <p className='font-medium text-[15px]' >${totalCost}</p>
-          </span>
-        </div>
       </div>
     </div>
   )

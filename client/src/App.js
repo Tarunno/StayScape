@@ -18,7 +18,7 @@ const App = () => {
   return (
     <div className='font-sans font-medium'>
       <Header isAuth={isAuth} setIsAuth={setIsAuth}/>
-      <div className='px-7 py-2 max-w-[1510px] m-auto'>
+      <div className='px-7 py-2 max-w-[1510px] m-auto pt-[87px]'>
         <Routes>
           <Route path='/' element={<IndexPage  isAuth={isAuth} setIsAuth={setIsAuth}/>}/>
           <Route path='/profile' element={<ProfilePage isAuth={isAuth} setIsAuth={setIsAuth} />} />

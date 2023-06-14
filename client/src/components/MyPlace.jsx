@@ -37,8 +37,8 @@ const MyPlace = ({place, handleEdit}) => {
           </div>
           <p className='mt-[-140px] h-[140px] bg-gradient-to-t from-gray-100 to-white-0'></p>
           <div className='mt-[20px]'>
-            {place.perks.map(perk => (
-              <p className='inline bg-brand py-2 px-3 rounded-full mr-1 text-white font-normal text-[13px]'>{perk}</p>
+            {place.perks.map((perk, index) => (
+              <p key={index} className='inline bg-brand py-2 px-3 rounded-full mr-1 text-white font-normal text-[13px]'>{perk}</p>
             ))}
           </div>
         </div>

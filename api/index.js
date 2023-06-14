@@ -18,6 +18,7 @@ connectDB()
 app.use('/api/user', require('./routes/userRoute'))
 app.use('/api/place', require('./routes/placeRoute'))
 app.use('/api/home', require('./routes/homeRoute'))
+app.use('/api/booking', require('./routes/bookingRoute'))
 
 app.use(errorHandler)
 

@@ -39,7 +39,7 @@ export const addPlaces = async (photos, data) => {
 }
 
 
-// @desc    Get all places
+// @desc    Get all places of a user
 // @route   GET /api/place 
 // @access  Private 
 export const getPlaces = async () => {
@@ -60,13 +60,8 @@ export const getPlaces = async () => {
 // @route   GET /api/place 
 // @access  Private 
 export const getPlace = async (id) => {
-  const user = isAuthenticate()
-
   const res = await fetch(BASE_URL + '/' + id , {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer ' + user.token 
-    }
+    method: 'GET'
   })
   const result = await res.json()
   return result

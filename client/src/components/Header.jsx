@@ -13,7 +13,7 @@ const Header = ({isAuth, setIsAuth}) => {
   const [modalType, setModalType] = useState('Sign up')
 
   return (
-    <div>
+    <div className='fixed top-0 bg-white w-full z-10'>
       <div className='px-6 py-4 w-full flex justify-between border border-b'>
         <Link to='/' className='flex gap-1 text-[25px] items-center hover:cursor-pointer'>
           <span className='flex font-bold text-brand text-[24px] justify-center items-center'> 
@@ -47,7 +47,7 @@ const Header = ({isAuth, setIsAuth}) => {
           </button>
 
           {!showUserOptions? null:
-            <div className='flex flex-col gap-3 bg-white text-black absolute top-[65px] right-[5px] z-10 p-5 w-[250px] rounded-lg' style={{boxShadow: '4px 4px 28px 1px rgba(0, 0, 0, 0.2)'}}>
+            <div className='flex flex-col gap-3 bg-white text-black absolute top-[75px] right-[20px] z-10 p-5 w-[250px] rounded-lg' style={{boxShadow: '4px 4px 28px 1px rgba(0, 0, 0, 0.2)'}}>
               {isAuth?
                 <ul>
                   <Link to='/profile'><li className='p-2 transition-all duration-300 rounded-lg hover:bg-[#f4f4f4]'>Profile</li></Link>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiUser, FiList, FiKey } from "react-icons/fi";
 import MyPlaces from './placesPage';
+import MyBookings from './bookingsPage';
 
 
 const ProfilePage = ({isAuth, setIsAuth}) => {
@@ -47,7 +47,7 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
         <p>Logged in as <span className="text-brand font-bold">@{user.name}</span></p>
       </div>}
       {tab === 1 && <div className='w-full p-1'>
-        <h1>My bookings</h1>
+        <MyBookings isAuth={isAuth}/>
       </div>}
       {tab === 2 && <div className='w-full p-1'>
         <MyPlaces/>
