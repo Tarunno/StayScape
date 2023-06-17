@@ -7,7 +7,7 @@ const BASE_URL = 'http://localhost:5000'
 const MyPlace = ({place, handleEdit}) => { 
 
   return (
-    <div className='flex gap-4 p-4 bg-gray-100 w-full rounded-xl mb-4 cursor-pointer' id={place._id} onClick={(e) => handleEdit(place._id)}>
+    <div className='flex gap-4 p-4 border bg-white shadow-lg w-full rounded-xl mb-6 cursor-pointer' id={place._id} onClick={(e) => handleEdit(place._id)}>
       <img className='h-[300px] w-[300px] object-cover rounded-xl' src={BASE_URL + '/api/media/places/' + place.photos[0]} />
       <div className='flex flex-col items-start gap-4'>
         <h1 className='text-2xl'>{place.title}</h1>

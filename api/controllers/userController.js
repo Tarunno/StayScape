@@ -46,8 +46,10 @@ const Signup = asyncHandler( async(req, res) => {
       token: generateToken(user.id)
     })
   }
-  res.status(400)
-  throw new Error('Something went wrong!')
+  else{
+    res.status(400)
+    throw new Error('Something went wrong!')
+  }
 })
 
 // @desc    Authenticate a user
@@ -81,8 +83,6 @@ const Login = asyncHandler(async (req, res) => {
       throw new Error('Invalid password!')
     }
   }
-  res.status(400)
-  throw new Error('Something went wrong!')
 })
 
 // @desc    Get user info
@@ -95,8 +95,10 @@ const UserInfo = asyncHandler(async (req, res) => {
     res.status(200)
     res.json(user)
   }
-  res.status(404)
-  throw new Error('User not found!')
+  else{
+    res.status(404)
+    throw new Error('User not found!')
+  }
 })
 
 module.exports = {

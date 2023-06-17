@@ -9,10 +9,14 @@ const protect = asyncHandler(async (req, res, next) => {
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
     try{
       token = req.headers.authorization.split(' ')[1]
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET)
-      req.user = await User.findById(decoded.id).select('-password')
-
+      if(token !== undefined){
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        req.user = await User.findById(decoded.id).select('-password')
+      }
+      else{
+        res.status(401)
+        return res.json({'message': 'No authorization token!'})
+      }
       next()
     } 
     catch(err){

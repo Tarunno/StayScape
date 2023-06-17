@@ -1,15 +1,32 @@
 import { useEffect, useState } from "react"
+import Slider from 'react-slider'
 import {GrCar} from 'react-icons/gr'
 import {TbDog} from 'react-icons/tb'
 import {BsDoorClosed} from 'react-icons/bs'
 import {IoRestaurantOutline} from 'react-icons/io5'
 import {CgSmartHomeWashMachine} from 'react-icons/cg'
 
+const MIN_PRICE = 10
+const MAX_PRICE = 500 
+
+const MIN_BEDROOMS = 0
+const MAX_BEDROOMS = 5
+const MIN_BEDS = 0
+const MAX_BEDS = 5
+const MIN_BATHROOMS = 0
+const MAX_BATHROOMS = 5
+
+const MIN_GUESTS = 0
+const MAX_GUESTS = 10
 
 const FilterType = ({
   type, setType, 
   perks, setPerks,
-  bedrooms, setBedrooms
+  bedrooms, setBedrooms,
+  beds, setBeds,
+  bathrooms, setBathrooms,
+  guests, setGuests,
+  priceRange, setPriceRange
   }) => {
 
   const [showFilter, setShowFilter] = useState(false)
@@ -18,7 +35,7 @@ const FilterType = ({
   const inputHeader = (header, description) => {
     return (
       <>
-        <h2 className="text-[20px] mt-4">{header}</h2>
+        <h2 className="text-[20px]">{header}</h2>
         <p className='text-gray-500'>{description}</p>
       </>
     )
@@ -34,8 +51,15 @@ const FilterType = ({
   }
 
   useEffect(() => {
-    if(perks) setFilter(perks.length)
-  }, [perks])
+    let numberOfFilter = 0
+    if(perks) numberOfFilter = perks.length
+    if(bedrooms[0] != MIN_BEDROOMS || bedrooms[1] != MAX_BEDROOMS) numberOfFilter += 1
+    if(bathrooms[0] != MIN_BATHROOMS || bathrooms[1] != MAX_BATHROOMS) numberOfFilter += 1
+    if(beds[0] != MIN_BEDS || beds[1] != MAX_BEDS) numberOfFilter += 1 
+    if(priceRange[0] != MIN_PRICE || priceRange[1] != MAX_PRICE) numberOfFilter += 1
+    if(guests[0] != MIN_GUESTS || guests[1] != MAX_GUESTS) numberOfFilter += 1
+    setFilter(numberOfFilter)
+  }, [perks, bedrooms, beds, bathrooms, priceRange])
 
   return (
     <div className="text-[15px]">
@@ -82,7 +106,8 @@ const FilterType = ({
       </ul>
       {showFilter && 
         <div className="fixed flex flex-col gap-4 left-0 top-0 w-[100vw] bg-white
-        min-h-[100vh] h-[100%] z-20 overflow-y-scroll slide-up p-5">
+        min-h-[100vh] h-[100%] z-50 overflow-y-scroll slide-up p-5">
+          <h1 className='text-[37px] font-normal relative top-1'>Filters</h1>
           <div onClick={() => setShowFilter(false)} className='flex fixed right-4 justify-end items-center p-2 cursor-pointer'>
             <div className='flex items-center justify-center p-2 border bg-white rounded-full w-[100px] shadow-md hover:shadow-lg transition-all duration-150'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -91,10 +116,10 @@ const FilterType = ({
               Close
             </div>
           </div>
-          <div className='grid grid-cols-2 gap-6 mt-20'>
-            <div className='p-4 border shadow-xl rounded-xl min-h-[200px] h-full'>
+          <div className='grid grid-cols-2 gap-6 mt-2'>
+            <div className='p-4 border shadow-xl rounded-xl min-h-[200px] h-full w-full'>
               {inputHeader('Perks', 'Select perks you want in places')}
-              <div className='grid gird-col-2 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2'>
+              <div className='grid gird-col-2 md:grid-cols-2 lg:grid-cols-2 gap-2 mt-2'>
                 <label className='border rounded-xl p-4 flex gap-2 items-center justify-start cursor-pointer'>
                   <input checked={perks.includes('Wifi')} name='Wifi' onChange={(e) => handleCheckbox(e)} type="checkbox" />
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -136,15 +161,54 @@ const FilterType = ({
                 </label>
               </div>
             </div>
-            <div className='p-4 border shadow-xl rounded-xl min-h-[200px] h-full'>
-              {inputHeader('Rooms', 'Select number of rooms')}
-              ////////////////////// NEXT: FILTER by BEDROOMS //////////////////////////
-            </div>
-            <div className='p-4 border shadow-xl rounded-xl min-h-[200px] h-full'>
-
-            </div>
-            <div className='p-4 border shadow-xl rounded-xl min-h-[200px] h-full'>
-              
+            <div className="h-full flex flex-col gap-6 w-full">
+              <div className='p-4 border shadow-xl rounded-xl min-h-[200px] w-full'>
+                {inputHeader('Rooms', 'Select number of rooms')}
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='flex flex-col gap-3 mt-2'>
+                    <p className='p-2 rounded-lg w-fit border border-gray-300 text-[13px]'>Bedrooms: {bedrooms[0]} - {bedrooms[1]}</p>
+                    <Slider className={"slider"} onChange={setBedrooms} value={bedrooms} min={MIN_BEDROOMS} max={MAX_BEDROOMS}/>
+                  </div>
+                  <div className='flex flex-col gap-3 mt-2'>
+                    <p className='p-2 rounded-lg w-fit border border-gray-300 text-[13px]'>Beds: {beds[0]} - {beds[1]}</p>
+                    <Slider className={"slider"} onChange={setBeds}
+                        value={beds}
+                        min={MIN_BEDS}
+                        max={MAX_BEDS}
+                    />
+                  </div>
+                  <div className='flex flex-col gap-3 mt-2'>
+                    <p className='p-2 rounded-lg w-fit border border-gray-300 text-[13px]'>Bathrooms: {bathrooms[0]} - {bathrooms[1]}</p>
+                    <Slider className={"slider"} onChange={setBathrooms} value={bathrooms} min={MIN_BATHROOMS} max={MAX_BATHROOMS}/>
+                  </div>
+                  <div className='flex flex-col gap-3 mt-2'>
+                    <p className='p-2 rounded-lg w-fit border border-gray-300 text-[13px]'>Guests: {guests[0]} - {guests[1]}</p>
+                    <Slider
+                        className={"slider"}
+                        onChange={setGuests}
+                        value={guests}
+                        min={MIN_GUESTS}
+                        max={MAX_GUESTS}
+                    />
+                  </div>
+                </div>  
+              </div>
+              <div className='p-4 border shadow-xl rounded-xl h-fit w-full'>
+                {inputHeader('Price', 'Select range you want to spend')}
+                <div className='flex flex-col gap-3 mt-2'>
+                  <span className='flex justify-start'>
+                    <p className='p-2 rounded-l-lg border border-gray-300 text-[13px]'>Starting: {priceRange[0]}</p>
+                    <p className='p-2 rounded-r-lg border border-gray-300 text-[13px]'>Ending: {priceRange[1]}</p>
+                  </span>
+                  <Slider
+                      className={"slider"}
+                      onChange={setPriceRange}
+                      value={priceRange}
+                      min={MIN_PRICE}
+                      max={MAX_PRICE}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>}

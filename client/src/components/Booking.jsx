@@ -157,10 +157,10 @@ const Booking = ({booking, place, owner, type, customer, handleApprove}) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             approved 
-            <button onClick={() => handleApprove(booking._id, 'pending')} className='ml-3 flex gap-1 items-center text-white bg-yellow-600 px-4 py-2 rounded-lg'>
+            <button onClick={() => handleApprove(booking._id, 'pending')} className='text-[13px] ml-3 flex gap-1 items-center text-white bg-yellow-600 px-4 py-2 rounded-full'>
               pending
             </button>
-            <button onClick={() => handleApprove(booking._id, 'cancel')} className='ml-2 flex gap-1 items-center text-white bg-red-700 px-4 py-2 rounded-lg'>
+            <button onClick={() => handleApprove(booking._id, 'cancel')} className='text-[13px] ml-0 flex gap-1 items-center text-white bg-red-700 px-4 py-2 rounded-full'>
               Cancel
             </button>
             </p>: <p className='flex gap-1 items-center text-yellow-700'>
@@ -168,10 +168,10 @@ const Booking = ({booking, place, owner, type, customer, handleApprove}) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             pending
-            <button onClick={() => handleApprove(booking._id, 'approve')} className='ml-3 flex gap-1 items-center text-white bg-green-500 px-4 py-2 rounded-lg'>
+            <button onClick={() => handleApprove(booking._id, 'approve')} className='text-[13px] ml-3 flex gap-1 items-center text-white bg-green-500 px-4 py-2 rounded-full'>
               Approve
             </button>
-            <button onClick={() => handleApprove(booking._id, 'cancel')} className='ml-2 flex gap-1 items-center text-white bg-red-700 px-4 py-2 rounded-lg'>
+            <button onClick={() => handleApprove(booking._id, 'cancel')} className='text-[13px] ml-0 flex gap-1 items-center text-white bg-red-700 px-4 py-2 rounded-full'>
               Cancel
             </button>
           </p> }

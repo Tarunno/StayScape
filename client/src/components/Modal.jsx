@@ -41,9 +41,9 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
 
   return (
     <div>
-      <div onClick={() =>  setShowModal(false)} className='cursor-pointer z-10 w-full fixed top-0 left-0 flex justify-center items-center h-full bg-gray-800 bg-opacity-20'>
+      <div onClick={() =>  setShowModal(false)} className='cursor-pointer z-40 w-full fixed top-0 left-0 flex justify-center items-center h-full bg-gray-800 bg-opacity-20'>
       </div>
-      <div className='fixed z-20 p-5 flex flex-col gap-2 bg-white text-black w-[500px] rounded-lg text-[15px] slide-up' style={{
+      <div className='fixed z-50 p-5 flex flex-col gap-2 bg-white text-black w-[500px] rounded-lg text-[15px] slide-up' style={{
           boxShadow: '5px 10px 30px rgba(100, 100, 100, 0.2)',
           top: '50%',
           left: '50%',
@@ -70,7 +70,7 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
               </form>: null
             }
             <div className="w-full h-[1px] bg-brand flex justify-center my-6">
-              <span className="bg-white z-10 flex justify-center mt-[-9px] items-center relative px-2 py-2 text-brand">or</span>
+              <span className="bg-white flex justify-center mt-[-9px] items-center relative px-2 py-2 text-brand">or</span>
             </div>
             <div className='flex flex-col gap-1 justify-between'>
               <button className='oauth'>

@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MyPlaces from './placesPage';
 import MyBookings from './bookingsPage';
+import Notifications from '../components/Notifications';
+import { getSavedPlaces, savePlace } from '../api/home';
+
+const BASE_URL = 'http://localhost:5000/api/media/places/'
 
 
 const ProfilePage = ({isAuth, setIsAuth}) => {
@@ -9,12 +13,28 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
   const [tab, setTab] = useState(0)
   const navigate = useNavigate()
   const [user, setUser] = useState(isAuth)
+  const [savedPlaces, setSavedPlaces] = useState([])
+
+  const inputHeader = (header, description) => {
+    return (
+      <div>
+        <h2 className="text-[20px]">{header}</h2>
+        <p className='text-gray-500'>{description}</p>
+      </div>
+    )
+  }
+
+  const handleSavedPlaces = async() => {
+    const saved = await getSavedPlaces()
+    setSavedPlaces(saved)
+  }
 
   useEffect(() => {
     setUser(isAuth)
     if (!isAuth) {
       navigate('/');
     }
+    handleSavedPlaces()
   }, [isAuth])
 
   useEffect(() => {
@@ -43,8 +63,61 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
           My accommodations
         </p>
       </div>
-      {tab === 0 && <div className='w-full p-1'>
+      {tab === 0 && <div className='w-full p-1 flex justify-center items-center flex-col gap-6'>
         <p>Logged in as <span className="text-brand font-bold">@{user.name}</span></p>
+        <div className='grid grid-cols-[3fr_2fr] gap-4 w-full'>
+          <div className='flex flex-col gap-4 w-full'>
+            {inputHeader('Saved Places', 'Places you have saved')}
+            <div className='grid grid-cols-3 gap-4 w-full'>
+              {savedPlaces && savedPlaces.length > 0 && savedPlaces.map(place => (
+                <Link to={'/place/' + place.place} className='flex gap-2 rounded-xl border shadow-lg p-2 w-full'>
+                  <img src={BASE_URL + place.photos[0]} className='rounded-lg brightness-150 w-[80px] aspect-square object-cover'/>
+                  <div className='w-full justify-between'>
+                    <p className='text-[13px]'>{place.title}</p>
+                    <svg onClick={async(e) => {
+                        e.preventDefault()
+                        await savePlace(place.place)
+                        await handleSavedPlaces()
+                      }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-red-600 hover:text-gray-500 transition-colors duration-150">
+                      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className='flex flex-col gap-4  w-full'>
+            {inputHeader('Notifications', 'Recent threads')}
+            <div className='flex flex-col gap-3  w-full text-[13px]'>
+              {/* ----------------------- DUMMY DATA -------------------- */}
+              <div className='flex justify-between w-full py-2 px-4 border rounded-xl shadow-lg'>
+                <p className=''>Pine-cooked cabins with their dogs</p>
+                <p className='text-red-500'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
+                  </svg>
+                </p>
+              </div>
+              <div className='flex justify-between w-full py-2 px-4 border rounded-xl shadow-lg'>
+                <p className=''>Pine-cooked cabins with their dogs</p>
+                <p className='text-red-500'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
+                  </svg>
+                </p>
+              </div>
+              <div className='flex justify-between w-full py-2 px-4 border rounded-xl shadow-lg'>
+                <p className=''>Pine-cooked cabins with their dogs</p>
+                <p className='text-red-500'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
+                  </svg>
+                </p>
+              </div>
+              {/* ------------------------ DUMMY DATA ---------------------- */}
+            </div>
+          </div>
+        </div>
       </div>}
       {tab === 1 && <div className='w-full p-1'>
         <MyBookings isAuth={isAuth}/>
