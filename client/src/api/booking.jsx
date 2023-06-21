@@ -65,3 +65,33 @@ export const approveBooking = async (id, action) => {
   const data = await res.json()
   return data
 }
+
+// @desc    Get notification of a user
+// @route   GET /api/booking/notifications
+// @access  Private 
+export const getNotification = async () => {
+  const user = isAuthenticate()
+  const res = await fetch(BASE_URL + '/notifications',  {
+    method: "GET",
+    headers: {
+      'Authorization': 'Bearer ' + user.token
+    }
+  })
+  const data = await res.json()
+  return data
+}
+
+// @desc    Mark seen notification
+// @route   GET /api/booking/notifications/:id
+// @access  Private 
+export const seenNotification = async (id) => {
+  const user = isAuthenticate()
+  const res = await fetch(BASE_URL + '/notifications/' + id,   {
+    method: "GET",
+    headers: {
+      'Authorization': 'Bearer ' + user.token
+    }
+  })
+  const data = await res.json()
+  return data
+}

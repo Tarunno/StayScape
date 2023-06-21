@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Booking = require('../models/bookingModel')
 const User = require('../models/userModel')
 const Place = require('../models/placeModel')
+const Notification = require('../models/notificationModel')
 
 // @desc    Book a plce
 // @route   POST /api/booking 
@@ -74,7 +75,7 @@ const GetBooked =  asyncHandler(async(req, res) => {
     for(let i=0; i<bookings.length; i++){
       const place = await Place.findById(bookings[i].place).select('photos title types address price')
       const owner = await User.findById(bookings[i].owner).select('name email')
-      const customer = await User.findById(bookings[i].owner).select('name email')
+      const customer = await User.findById(bookings[i].customer).select('name email')
       places.push(place)
       owners.push(owner)
       customers.push(customer)
@@ -93,6 +94,9 @@ const GetBooked =  asyncHandler(async(req, res) => {
   }
 })
 
+// @desc    Approve, pending or cancel a booking
+// @route   GET /api/booking/booked/:action/:id
+// @access  Private 
 const ApproveBooking = asyncHandler(async(req, res) => {
   const id = req.params.id 
   const action = req.params.action 
@@ -129,9 +133,56 @@ const ApproveBooking = asyncHandler(async(req, res) => {
   }
 })
 
+
+// @desc    Get notification of a user
+// @route   GET /api/booking/notifications
+// @access  Private 
+const GetNotification = asyncHandler(async(req, res) => {
+  const notifications = await Notification.find({to:req.user.id}).sort({created_at:-1})
+  
+  const result = []
+  for(let i=0; i<notifications.length; i++){
+    if(notifications[i]['read'] == false){
+      
+      let resStr = ''
+      const place = await Place.findById(notifications[i]['place'])
+      if(place){
+        if(notifications[i]['action'] == 'approved'){
+          resStr = `You booking of ${place.title.slice(0, 15)}... got approved`
+        }
+        else if(notifications[i]['action'] == 'pending'){
+          resStr = `You booking of ${place.title.slice(0, 15)}... got pending again`
+        }
+        else if(notifications[i]['action'] == 'cancel'){
+          resStr = `You booking of ${place.title.slice(0, 15)}... got cancel`
+        }
+        result.push({_id:notifications[i]['_id'], notification: resStr, read:notifications[i]['read']})
+      }
+    }
+  }
+  console.log(result);
+  res.status(200)
+  res.json({notifications:result})
+})
+
+
+// @desc    Mark seen notification
+// @route   GET /api/booking/notifications/:id
+// @access  Private 
+const SeenNotification = asyncHandler(async(req, res) => {
+  const notification = await Notification.findById(req.params.id)  
+  await notification.set({read:true})
+  await notification.save()
+  res.status(200)
+  res.json({'messgae': 'Notification marked seen'})
+})
+
+
 module.exports = {
   BookPlace,
   GetBookings,
   GetBooked,
-  ApproveBooking
+  ApproveBooking,
+  GetNotification,
+  SeenNotification
 }

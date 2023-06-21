@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
 import {Logout} from "../api/auth"
 import { useNavigate } from "react-router-dom";
 import {BiHomeHeart} from 'react-icons/bi'
 
-const Header = ({isAuth, setIsAuth}) => {
+const Header = ({isAuth, setIsAuth, socket, notification, setNotification}) => {
 
   const navigate = useNavigate()    
   const [showUserOptions, setShowUserOptions] = useState(false) 
   const [showModal, setShowModal] = useState(false)
   const [modalType, setModalType] = useState('Sign up')
+
+  useEffect(() => {
+    if(socket){
+      socket.on('notification', (ping) => {
+        console.log(ping);
+        setNotification(true)
+      })
+    }
+  }, [socket])
 
   return (
     <div className='fixed top-0 bg-white w-full z-10'>
@@ -34,6 +43,7 @@ const Header = ({isAuth, setIsAuth}) => {
           </button>
         </div>
         <div onClick={() => setShowUserOptions(!showUserOptions)} className='text-black flex px-2 justify-center items-center text-[15px] shadow-md border border-gray-300 rounded-full hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out'>
+          {!showUserOptions && notification && <p className='p-2 shadow-md bg-brand rounded-full border-3 relative top-[-15px] ml-[-16px]'></p>}
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-[-5px]">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
@@ -51,6 +61,7 @@ const Header = ({isAuth, setIsAuth}) => {
               {isAuth?
                 <ul>
                   <Link to='/profile'><li className='p-2 transition-all duration-300 rounded-lg hover:bg-[#f4f4f4]'>Profile</li></Link>
+                  {showUserOptions && notification && <p className='p-2 w-2 shadow-md bg-brand rounded-full border-3 relative top-[-37px] ml-[-8px] mb-[-16px]'></p>}
                   <li onClick={async () => {
                     Logout()
                     await setIsAuth(false)

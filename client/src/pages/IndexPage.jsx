@@ -180,10 +180,10 @@ const IndexPage = ({isAuth}) => {
                 {handleDateFormat(place.checkIn, place.checkOut)}
               </p>
               <p className='text-[15px] flex justify-between items-center'>
-                <div>
+                <span>
                   <span className='font-semibold'>{'$' + place.price}</span>
                   <span className='font-normal'> per night </span>
-                </div>
+                </span>
                 {savedPlaces && savedPlaces.indexOf(place._id) !== -1 && 
                   <svg onClick={(e) => {
                     e.preventDefault()

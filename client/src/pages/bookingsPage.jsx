@@ -5,7 +5,7 @@ import Booking from "../components/Booking"
 import { Link } from "react-router-dom"
 
 
-const MyBookings = ({isAuth}) => {
+const MyBookings = ({isAuth, socket}) => {
 
   const [bookings, setBookings] = useState([])
   const [places, setPlaces] = useState([])
@@ -57,8 +57,17 @@ const MyBookings = ({isAuth}) => {
     setLoading_2(false)
   }
 
-  const handleApprove = async (id, action) => {
+  const handleApprove = async (id, action, customer, owner, place) => {
     await approveBooking(id, action)
+    console.log(socket);
+    if(socket){
+      socket.emit(action, {
+        user:isAuth.usename, 
+        place, 
+        customer, 
+        owner
+      })
+    }
     handleGetBooked()
   }
 

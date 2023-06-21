@@ -2,18 +2,19 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MyPlaces from './placesPage';
 import MyBookings from './bookingsPage';
-import Notifications from '../components/Notifications';
 import { getSavedPlaces, savePlace } from '../api/home';
+import { getNotification, seenNotification } from '../api/booking';
 
 const BASE_URL = 'http://localhost:5000/api/media/places/'
 
 
-const ProfilePage = ({isAuth, setIsAuth}) => {
+const ProfilePage = ({isAuth, setIsAuth, socket, notification, setNotification}) => {
 
   const [tab, setTab] = useState(0)
   const navigate = useNavigate()
   const [user, setUser] = useState(isAuth)
   const [savedPlaces, setSavedPlaces] = useState([])
+  const [notificationsList, setNotificationsList] = useState([])
 
   const inputHeader = (header, description) => {
     return (
@@ -29,13 +30,32 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
     setSavedPlaces(saved)
   }
 
+  const handleNotification = async() => {
+    const res = await getNotification()
+    setNotificationsList(res['notifications'])
+  }
+
+  const handleSeen = async(e, id) => {
+    e.target.style.opacity = '0.5'
+    await seenNotification(id)
+  }
+
   useEffect(() => {
     setUser(isAuth)
     if (!isAuth) {
       navigate('/');
     }
     handleSavedPlaces()
+    handleNotification()
+    setNotification(false)
   }, [isAuth])
+
+  useEffect(() => {
+    handleNotification()
+    if(tab === 0){
+      setNotification(false)
+    }
+  }, [tab])
 
   useEffect(() => {
     document.title = 'StayScape | Profile'
@@ -70,7 +90,7 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
             {inputHeader('Saved Places', 'Places you have saved')}
             <div className='grid grid-cols-3 gap-4 w-full'>
               {savedPlaces && savedPlaces.length > 0 && savedPlaces.map(place => (
-                <Link to={'/place/' + place.place} className='flex gap-2 rounded-xl border shadow-lg p-2 w-full'>
+                <Link to={'/place/' + place.place} key={place.place} className='flex gap-2 rounded-xl border shadow-lg p-2 w-full'>
                   <img src={BASE_URL + place.photos[0]} className='rounded-lg brightness-150 w-[80px] aspect-square object-cover'/>
                   <div className='w-full justify-between'>
                     <p className='text-[13px]'>{place.title}</p>
@@ -89,38 +109,25 @@ const ProfilePage = ({isAuth, setIsAuth}) => {
           <div className='flex flex-col gap-4  w-full'>
             {inputHeader('Notifications', 'Recent threads')}
             <div className='flex flex-col gap-3  w-full text-[13px]'>
-              {/* ----------------------- DUMMY DATA -------------------- */}
-              <div className='flex justify-between w-full py-2 px-4 border rounded-xl shadow-lg'>
-                <p className=''>Pine-cooked cabins with their dogs</p>
-                <p className='text-red-500'>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
+              {notificationsList && notificationsList.length > 0 && notificationsList.map(notification => (
+                <div key={notification._id} className='flex justify-between items-center w-full py-2 px-4 border rounded-xl shadow-lg cursor-pointer' 
+                  onClick={(e) => handleSeen(e, notification._id)}
+                  style={{opacity: notification.read? '0.5': '1'}}
+                >
+                <p className='pointer-events-none flex items-center gap-1'>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand">
+                    <path d="M11.983 1.907a.75.75 0 00-1.292-.657l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.657l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
                   </svg>
+                  {notification.notification}
                 </p>
-              </div>
-              <div className='flex justify-between w-full py-2 px-4 border rounded-xl shadow-lg'>
-                <p className=''>Pine-cooked cabins with their dogs</p>
-                <p className='text-red-500'>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
-                  </svg>
-                </p>
-              </div>
-              <div className='flex justify-between w-full py-2 px-4 border rounded-xl shadow-lg'>
-                <p className=''>Pine-cooked cabins with their dogs</p>
-                <p className='text-red-500'>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
-                  </svg>
-                </p>
-              </div>
-              {/* ------------------------ DUMMY DATA ---------------------- */}
+              </div>))
+              }
             </div>
           </div>
         </div>
       </div>}
       {tab === 1 && <div className='w-full p-1'>
-        <MyBookings isAuth={isAuth}/>
+        <MyBookings isAuth={isAuth} socket={socket}/>
       </div>}
       {tab === 2 && <div className='w-full p-1'>
         <MyPlaces/>

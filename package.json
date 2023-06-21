@@ -1,5 +1,5 @@
 {
-  "name": "breezebnb",
+  "name": "stayscape",
   "version": "1.0.0",
   "description": "A full-stack application using: - React js, Node js, Express js, MongoDB (MERN) - Tailwindcss",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tarunno/BreezeBnB.git"
+    "url": "git+https://github.com/Tarunno/StayScape.git"
   },
   "author": "Mahadi Hasan Taronno",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Tarunno/BreezeBnB/issues"
+    "url": "https://github.com/Tarunno/StayScape/issues"
   },
-  "homepage": "https://github.com/Tarunno/BreezeBnB#readme",
+  "homepage": "https://github.com/Tarunno/StayScape#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
@@ -30,7 +30,8 @@
     "multer": "^1.4.5-lts.1",
     "react-loader-spinner": "^5.3.4",
     "react-markdown": "^8.0.7",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "socket.io": "^4.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
