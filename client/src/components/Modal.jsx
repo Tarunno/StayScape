@@ -21,7 +21,7 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
     }
     const data = await Authenticate(cardinals, action)
 
-    if(data['message'] === undefined){
+    if(data['error'] === undefined){
       setMessage({
         type: 'success',
         payload: action + ' successful!'
@@ -34,7 +34,7 @@ const Modal = ({setShowModal, type, setIsAuth}) => {
     else{
       setMessage({
         type: 'error',
-        payload: data['message']
+        payload: data['error']
       })
     }
   }

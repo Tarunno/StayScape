@@ -35,6 +35,7 @@ export const Authenticate = async (cardinals, action) => {
     })
   })
   const data = await res.json()
-  if(!data['message']) localStorage.setItem('StayScape_auth',  JSON.stringify(data))
+  console.log(data);
+  if(!data['error']) localStorage.setItem('StayScape_auth',  JSON.stringify(data))
   return data
 }
